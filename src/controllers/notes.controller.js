@@ -22,20 +22,29 @@ notesCtrl.renderNotes = async (req, res) => {
             const newNotaObject = {
                 nota: notas.map(data => {
                     return {
+                        id:data.id,
                         title: data.title,
                         description: data.description
                     }
                 })
             }
-          
+    console.log(newNotaObject.nota)
     res.render('notes/all-notes', {nota: newNotaObject.nota
     })
     }).catch(error => res.status(500).send(error)); 
 };
 
 notesCtrl.renderEditForm = async (req, res) => {
-    const note = await Note.findById(req.params.id);
-    res.render('notes/edit-note', { note });
+    await Note.findById(req.params.id).then( nota => {
+        const newNotaObject = {
+                    id:nota.id,
+                    title: nota.title,
+                    description: nota.description
+                }
+       
+                console.log(newNotaObject)
+    res.render('notes/edit-note', {nota: newNotaObject})
+}).catch(error => res.status(500).send(error))
 };
 
 notesCtrl.updateNote = async (req, res) => {
