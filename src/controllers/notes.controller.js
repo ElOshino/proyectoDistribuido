@@ -17,10 +17,20 @@ notesCtrl.createNewNote = async (req, res) => {
 
 };
 
-notesCtrl.renderNotes = async (req, res) => {
-    const notes = await Note.find();
-
-    res.render('notes/all-notes', { notes });
+notesCtrl.renderNotes = async (req, res) => {   
+    await Note.find().then(notas => {
+            const newNotaObject = {
+                nota: notas.map(data => {
+                    return {
+                        title: data.title,
+                        description: data.description
+                    }
+                })
+            }
+          
+    res.render('notes/all-notes', {nota: newNotaObject.nota
+    })
+    }).catch(error => res.status(500).send(error)); 
 };
 
 notesCtrl.renderEditForm = async (req, res) => {
